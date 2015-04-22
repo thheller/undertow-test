@@ -6,6 +6,8 @@
            [io.undertow.server HttpHandler]
            (java.nio ByteBuffer)))
 
+(set! *warn-on-reflection* true)
+
 (def test-body
   (slurp (io/resource "data.txt")))
 
@@ -26,7 +28,7 @@
         (.put Headers/CONTENT_LENGTH ^long test-body-len))
       (-> exchange
           (.getResponseSender)
-          (.send (.duplicate test-body-buffer))))))
+          (.send (.duplicate ^ByteBuffer test-body-buffer))))))
 
 (defn start-server [host port]
   (let [server (-> (Undertow/builder)
